@@ -20,6 +20,8 @@ const words2 = [
     
 ]
 
+const a = 1;
+
 mongoose.connect('mongodb://localhost:27017', {
         useNewUrlParser: true, 
         dbName: DBname,
