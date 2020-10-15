@@ -78,28 +78,31 @@ const wordsSchema = new mongoose.Schema({
 
 
 const Wordsset = mongoose.model('wordssets', wordsSchema) // its colection
-console.log(Wordsset)
 
 const userSchema = new mongoose.Schema({
     login: String,
     password: String,
-    language: String,
+
+    profileSettings: {
+        language: String,
+        theme: String
+    },
+
     bio: {
-        name: String,
-        age: Number,
-        birthDay: Number,
+        firstName: String,
+        lastName: String,
+        age: String,
+        birthDay: String,
+        national: String,
         sex: String,
         country: String,
-        town: String
-    },
-    wordKits: [], //make schema for every elements of array
-    trainingResults: []
+        town: String,
+    }
 
-   
+    
 })
 
-const Users = mongoose.model('users', userSchema)
-
+const Users = mongoose.model('users', userSchema);
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -116,22 +119,42 @@ const errors = (req, res) => {
 }
 
 
-app.route('/biography')
-   .put((req, res) => {
-       const userId = req.body.userId;
-        console.log(req.body)
-        Users.findByIdAndUpdate('5f82ee64f1cb7f345ce05193', {language: 'eng'}, {new: false})
-             .then((data) => console.log(data))
-             
-        res.end()
+app.route('/userbiography')
+   .post((req, res) => {
+        const userId = req.body.userId;
+        const putData = req.body.data;
+        Users.findByIdAndUpdate(userId, {'bio': putData}, {new: true}, (err, data) => {
+            if(err) res.send(err)
+            res.send({responseCode: 1})
+        })
    })
 
    .get((req, res) => {
-        const userId = req.body.userId;
-        Users.findById(userId, {language: true, login: true, password: true},  {__v: 0, _id: 0, login: 0, password: 0})
-             .then(data => res.send(data))
+       const userId = req.query.userid;
+       Users.findById(userId, {"bio": true} , { __v: 0, _id: 0, login: 0, password: 0, wordKits: 0, trainingResults: 0 })
+             .then((data) => res.send({ responseCode: 1, personalData: data.bio }));
    })
 
+//!віз креденшеналс зробити, я так можу будь чиї дані потягнути;
+
+app.route('/userprofilesettings')
+   .post((req, res) => {
+       const userId = req.body.userId
+       const postData = req.body.data;
+       console.log(postData)
+       Users.findByIdAndUpdate(userId, {"profileSettings": postData}, {new: true}, (err, data) => {
+           if(err) res.send(err);
+           console.log('data', data)
+           res.send({responseCode: 1})
+       })
+   })
+
+
+   .get((req, res) => {
+        const userId = req.query.userid;
+        Users.findById(userId, {"profileSettings": true}, { __v: 0, _id: 0, login: 0, password: 0, wordKits: 0, trainingResults: 0 })
+             .then(data => res.send(data.profileSettings))
+   })
    
    
 
