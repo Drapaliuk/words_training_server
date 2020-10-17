@@ -122,9 +122,11 @@ const errors = (req, res) => {
 app.route('/userbiography')
    .post((req, res) => {
         const userId = req.body.userId;
-        const putData = req.body.data;
-        Users.findByIdAndUpdate(userId, {'bio': putData}, {new: true}, (err, data) => {
+        console.log('userId', userId)
+        const postData = req.body.data;
+        Users.findByIdAndUpdate(userId, {'bio': postData}, {new: true}, (data, err) => {
             if(err) res.send(err)
+            console.log(data)
             res.send({responseCode: 1})
         })
    })
@@ -162,21 +164,24 @@ app.route('/login')
    .post((req, res) => {
         const login = req.body.login;
         const password = req.body.password
-        // console.log('req.session', req.session)
-        Users.find({login: login}, {_id:0})
-             .then((data, err) => {
+        Users.find({login: login})
+             .then((foundUser, err) => {
                  if(err) throw err;
-                 console.log(data)
-                 if(data.length === 1) {
-                     console.log('inside')
-                     bcrypt.compare(password, data[0].password, function(err, result) {
+                 if(foundUser.length === 1) {
+                     bcrypt.compare(password, foundUser[0].password, function(err, result) {
                          if(err) throw err;
-                         console.log('result', result)
                          if(result) {
-                             return res.status(200).send({responseCode: 1})
+                            const responseObject = {
+                                responseCode: 1,
+                                message: 'user has found',
+                                errMessage: err,
+                                userId: foundUser[0]._id
+                            }
+
+                             return res.status(200).send(responseObject)
                          }
  
-                         return  res.status(403).send({responseCode: 0})
+                         return  res.status(401).send({responseCode: 2})
                      })
                      return
                  }
@@ -188,8 +193,8 @@ app.route('/signin')
    .post((req, res) => {
     const login = req.body.login;
     const password = req.body.password;
-    console.log("req.body", req.body)
-    Users.find({login: login}, {_id: 0})
+
+    Users.find({login: login})
          .then((data, err) => {
             if(err) throw err
             if(data.length === 0) {
@@ -199,29 +204,27 @@ app.route('/signin')
                             login: login,
                             password: hash
                         }
-                        console.log('user object', userObject)
                         Users.create(userObject, (err, createdObject ) => {
+                            console.log(createdObject)
                            if(err) res.send({responseCode: 3, errMessage: err})
-                           
-                           
-                                const responseObject = {
+                                const successResponse = {
                                     responseCode: 1,
                                     message: 'user has created',
-                                    errMessage: err
+                                    errMessage: err,
+                                    userId: createdObject._id
                                 }
-                                return res.send(responseObject)
-                            
+                                return res.send(successResponse)
                         } )
                       })
                 return
             }
-            const responseObject = {
-                responseCode: 1,
+            const mistakeResponse = {
+                responseCode: 2,
                 message: 'this login has already in use',
                 errMessage: err
             }
 
-            return res.send(responseObject)
+            return res.send(mistakeResponse)
          })
 })
 
