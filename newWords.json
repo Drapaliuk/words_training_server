@@ -1,0 +1,286 @@
+[
+  {
+    "eng": "kitchen",
+    "ukr": "кухня"
+  },
+  {
+    "eng": "knife",
+    "ukr": "ніж"
+  },
+  {
+    "eng": "fork",
+    "ukr": "вилка"
+  },
+  {
+    "eng": "spoon",
+    "ukr": "ложка"
+  },
+  {
+    "eng": "pan",
+    "ukr": "каструля"
+  },
+  {
+    "eng": "oven",
+    "ukr": "піч"
+  },
+  {
+    "eng": "oil",
+    "ukr": "олія"
+  },
+  {
+    "eng": "vinegar",
+    "ukr": "оцет"
+  },
+  {
+    "eng": "matches",
+    "ukr": "сірники"
+  },
+  {
+    "eng": "tablecloth",
+    "ukr": "скатертина"
+  },
+  {
+    "eng": "soap",
+    "ukr": "мило"
+  },
+  {
+    "eng": "shower",
+    "ukr": "душ"
+  },
+  {
+    "eng": "bath",
+    "ukr": "ванна"
+  },
+  {
+    "eng": "bowl",
+    "ukr": "унітаз"
+  },
+  {
+    "eng": "brush",
+    "ukr": "щітка"
+  },
+  {
+    "eng": "water",
+    "ukr": "вода"
+  },
+  {
+    "eng": "sink",
+    "ukr": "раковина"
+  },
+  {
+    "eng": "hot",
+    "ukr": "гарячий"
+  },
+  {
+    "eng": "cold",
+    "ukr": "холодний"
+  },
+  {
+    "eng": "mirror",
+    "ukr": "дзеркало"
+  },
+  {
+    "eng": "house",
+    "ukr": "будинок"
+  },
+  {
+    "eng": "street",
+    "ukr": "вулиця"
+  },
+  {
+    "eng": "sign",
+    "ukr": "знак"
+  },
+  {
+    "eng": "crosswalk",
+    "ukr": "пішохідний перехід"
+  },
+  {
+    "eng": "bus",
+    "ukr": "автобус"
+  },
+  {
+    "eng": "underground",
+    "ukr": "метро"
+  },
+  {
+    "eng": "station",
+    "ukr": "зупинка"
+  },
+  {
+    "eng": "prdestrian",
+    "ukr": "піщохід"
+  },
+  {
+    "eng": "driver",
+    "ukr": "водій"
+  },
+  {
+    "eng": "ticket",
+    "ukr": "квиток"
+  },
+  {
+    "eng": "road",
+    "ukr": "дорога"
+  },
+  {
+    "eng": "gas station",
+    "ukr": "заправка"
+  },
+  {
+    "eng": "guide",
+    "ukr": "гід"
+  },
+  {
+    "eng": "excursion",
+    "ukr": "екскурсія"
+  },
+  {
+    "eng": "travel",
+    "ukr": "подорож"
+  },
+  {
+    "eng": "backpack",
+    "ukr": "рюкзак"
+  },
+  {
+    "eng": "help",
+    "ukr": "допомога"
+  },
+  {
+    "eng": "campaign",
+    "ukr": "похід"
+  },
+  {
+    "eng": "tent",
+    "ukr": "палатка"
+  },
+  {
+    "eng": "mosquito spray",
+    "ukr": "спрей від комарів"
+  },
+  {
+    "eng": "strada",
+    "ukr": "дорога"
+  },
+  {
+    "eng": "spoon",
+    "ukr": "ложка"
+  },
+  {
+    "eng": "fork",
+    "ukr": "вилка"
+  },
+  {
+    "eng": "cat",
+    "ukr": "кіт"
+  },
+  {
+    "eng": "shelf",
+    "ukr": "полиця"
+  },
+  {
+    "eng": "tabble",
+    "ukr": "стіл"
+  },
+  {
+    "eng": "road",
+    "ukr": "дорога"
+  },
+  {
+    "eng": "house",
+    "ukr": "дім"
+  },
+  {
+    "eng": "wall",
+    "ukr": "стіна"
+  },
+  {
+    "eng": "socket",
+    "ukr": "розетка"
+  },
+  {
+    "eng": "laptop",
+    "ukr": "ноутбук"
+  },
+  {
+    "eng": "map",
+    "ukr": "карта"
+  },
+  {
+    "eng": "pen",
+    "ukr": "ручка"
+  },
+  {
+    "eng": "copybook",
+    "ukr": "зошит"
+  },
+  {
+    "eng": "chair",
+    "ukr": "стілець"
+  },
+  {
+    "eng": "wardrobe",
+    "ukr": "шафа"
+  },
+  {
+    "eng": "suddenly",
+    "ukr": "раптом"
+  },
+  {
+    "eng": "opinion",
+    "ukr": "думка"
+  },
+  {
+    "eng": "fault",
+    "ukr": "помилка"
+  },
+  {
+    "eng": "clarify",
+    "ukr": "уточняти"
+  },
+  {
+    "eng": "greedy",
+    "ukr": "жадібний"
+  },
+  {
+    "eng": "addict",
+    "ukr": "залежний"
+  },
+  {
+    "eng": "sink",
+    "ukr": "раковина"
+  },
+  {
+    "eng": "blanket",
+    "ukr": "ковдра"
+  },
+  {
+    "eng": "suitcase",
+    "ukr": "валіза"
+  },
+  {
+    "eng": "wire",
+    "ukr": "дріт"
+  },
+  {
+    "eng": "fryuing pan",
+    "ukr": "сковорідка"
+  },
+  {
+    "eng": "pan",
+    "ukr": "каструля"
+  },
+  {
+    "eng": "ladder",
+    "ukr": "драбина"
+  },
+  {
+    "eng": "shovel",
+    "ukr": "лопата"
+  },
+  {
+    "eng": "carpet",
+    "ukr": "кидим"
+  }
+]

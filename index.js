@@ -47,8 +47,36 @@ db.on('error', () => {
 
 const wordSchema  = new mongoose.Schema({
     eng: String,
-    ua: String,
+    ukr: String,
 })
+
+
+const Word = mongoose.model('words', wordSchema)
+
+const WordsKitSchema = new mongoose.Schema({
+    serviceInfo: {
+        type: Object,
+        setName: String,
+        wordsAmmount: Number,
+    },
+    words: Array
+})
+
+const WordKit = mongoose.model('word_kits', WordsKitSchema)
+
+
+WordKit.find({}, (err, data) => {
+
+    console.log(data[0].words)
+
+    Word.findById(data[0].words[1]).then(data => console.log(data))
+})
+
+
+
+
+
+
 
 const wordsSetsSchema = new mongoose.Schema({
     serviceInfo: {
@@ -73,7 +101,6 @@ const wordsSchema = new mongoose.Schema({
 
         words: [wordSchema]
 })
-
 
 
 
@@ -321,6 +348,11 @@ app.route('/userVocabulary')
         if(req.body) {
             res.send({responseCode: 1})
         }
+
+        // const wordsIds = req.body.wordsIds;
+
+
+
         res.send({responseCode: 0})
     })
     
