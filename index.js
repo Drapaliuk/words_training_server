@@ -119,15 +119,14 @@ const errors = (req, res) => {
 }
 
 
+
 app.route('/userbiography')
    .post((req, res) => {
         const userId = req.body.userId;
-        console.log('userId', userId)
         const postData = req.body.data;
-        Users.findByIdAndUpdate(userId, {'bio': postData}, {new: true}, (data, err) => {
-            if(err) res.send(err)
-            console.log(data)
-            res.send({responseCode: 1})
+        Users.findByIdAndUpdate(userId, {'bio': postData}, {new: true}, (err, data) => {
+            if(err) return res.send(err)
+            return res.send({responseCode: 1})
         })
    })
 
@@ -178,10 +177,10 @@ app.route('/login')
                                 userId: foundUser[0]._id
                             }
 
-                             return res.status(200).send(responseObject)
+                             return res.send(responseObject)
                          }
  
-                         return  res.status(401).send({responseCode: 2})
+                         return  res.send({responseCode: 2})
                      })
                      return
                  }
