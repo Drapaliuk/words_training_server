@@ -56,26 +56,12 @@ const Word = mongoose.model('words', wordSchema)
 const WordsKitSchema = new mongoose.Schema({
     serviceInfo: {
         type: Object,
-        setName: String,
-        wordsAmmount: Number,
+        name: String,
     },
     words: Array
 })
 
 const WordKit = mongoose.model('word_kits', WordsKitSchema)
-
-
-WordKit.find({}, (err, data) => {
-
-    console.log(data[0].words)
-
-    Word.findById(data[0].words[1]).then(data => console.log(data))
-})
-
-
-
-
-
 
 
 const wordsSetsSchema = new mongoose.Schema({
@@ -90,9 +76,6 @@ const wordsSetsSchema = new mongoose.Schema({
     }
 })
 
-
-
-
 const wordsSchema = new mongoose.Schema({
         serviceInfo: {
             setName: String,
@@ -105,6 +88,19 @@ const wordsSchema = new mongoose.Schema({
 
 
 const Wordsset = mongoose.model('wordssets', wordsSchema) // its colection
+
+WordKit.find({'serviceInfo.name': 'city'}, (err, data) => { //!повертає слова певного набору
+    const wordsId = data[0].words
+    Word.find({'_id': {$in: wordsId}}, {__v: 0}, (err, words) => {
+        // console.log(words)
+    })
+})
+
+WordKit.find({}, {__v: 0, words: 0}, (err, data) => { //! повертає колекцію службових даних про всі набори слів
+    // console.log(data)
+})
+
+
 
 const userSchema = new mongoose.Schema({
     login: String,
@@ -144,6 +140,9 @@ app.use(cookieSession({
 const errors = (req, res) => {
     return res.send('end')
 }
+
+
+
 
 
 
@@ -257,22 +256,23 @@ app.route('/signin')
 
 app.route('/words')
     .get((req, res) => {
-        let setname = req.query.setname
-        Wordsset.find({'serviceInfo.setName':setname}, {_id:0}, (err, data) => { //!от як шукати в підпапках
-            res.json(data[0].words)
+        let kitName = req.query.setname
+        WordKit.find({'serviceInfo.name': kitName}, (err, data) => { //!повертає слова певного набору
+            const wordsId = data[0].words
+            Word.find({'_id': {$in: wordsId}}, {__v: 0}, (err, data) => {
+                res.json(data)
+
+            })
         })
     })
 
 app.route('/setsNames') //! переробити пошук по _id
    .get((req, res) => {
-        Wordsset.find((err, data) => {
-            let arr = data.reduce((acc, el, idx, arr) => {
-                acc.push(el.serviceInfo.setName)
-                return acc
-            }, [])
-            res.json(arr)
+        WordKit.find({}, {__v: 0, words: 0}, (err, data) => { //! повертає колекцію службових даних про всі набори слів
+            res.json(data)
         })
    })
+
 
 app.route('/vocabularyTest')
    .get((req, res) => {
@@ -285,29 +285,21 @@ app.route('/vocabularyTest')
 
 
 
-app.route('/mixWords/')
-   .get((req, res) => {
-        Wordsset.find((err, data) => {
-            let mathLogic = Math.ceil(((req.query.wordsAmmount * 5)) / (data.length - 1)) //! переглянути формулу
-
-            let responseArr = data.reduce((acc, el, id, arr) => { //! переробити пошук по _id
-                if(el.serviceInfo.setName === req.query.selectedset) { //! в базі даних змінити setName на name
-                    return acc
-                }
-
-                for(let i = 0; i < mathLogic; i++) {
-                    acc.push(el.words[i])
-                }
-
-                return acc
-
-            }, [])
-            res.send(responseArr)
+app.route('/mixWords/') //!remake to post with ids of selected words
+   .post((req, res) => {
+        Word.find({}, {__v: 0}, (err, data) => {
+            res.send(data)
         })
    })
+
+app.route('/taskCards')
+   .post((req, res) => {
+        console.log('REQUEST BODY!!!', req.body)
+   })
+
 app.route('/trainingResult')
    .post((req, res) => {
-       console.log(req.body)
+       console.log(req.body[0])
         const result = req.body.reduce((acc, el, idx, arr) => {
             if(el.trainingId === '001') {
                 if(el.isSkipped) {
@@ -348,10 +340,6 @@ app.route('/userVocabulary')
         if(req.body) {
             res.send({responseCode: 1})
         }
-
-        // const wordsIds = req.body.wordsIds;
-
-
 
         res.send({responseCode: 0})
     })
