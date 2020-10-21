@@ -6,12 +6,15 @@ let cors = require('cors');
 let bodyParser = require('body-parser');
 const app = express();
 const mongoose = require('mongoose');
-const { type } = require('os');
-const e = require('express');
+// const { type } = require('os');
+// const e = require('express');
 const { on } = require('process');
 const educationPlanCreator = require('./logic/create_education_plan')
 const bcrypt = require('bcrypt');
 const DBname = 'wordtrainer';
+const getRandomElementsById = require('./logic/getRandomElementsById');
+const taskCardCreator = require('./logic/taskCardCreator');
+const mixingElements = require('./logic/mixingElements');
 
 
 const port = 8888;
@@ -120,9 +123,8 @@ const userSchema = new mongoose.Schema({
         sex: String,
         country: String,
         town: String,
-    }
-
-    
+    },
+    vocabulary: []
 })
 
 const Users = mongoose.model('users', userSchema);
@@ -168,10 +170,8 @@ app.route('/userprofilesettings')
    .post((req, res) => {
        const userId = req.body.userId
        const postData = req.body.data;
-       console.log(postData)
        Users.findByIdAndUpdate(userId, {"profileSettings": postData}, {new: true}, (err, data) => {
            if(err) res.send(err);
-           console.log('data', data)
            res.send({responseCode: 1})
        })
    })
@@ -230,7 +230,6 @@ app.route('/signin')
                             password: hash
                         }
                         Users.create(userObject, (err, createdObject ) => {
-                            console.log(createdObject)
                            if(err) res.send({responseCode: 3, errMessage: err})
                                 const successResponse = {
                                     responseCode: 1,
@@ -294,12 +293,69 @@ app.route('/mixWords/') //!remake to post with ids of selected words
 
 app.route('/taskCards')
    .post((req, res) => {
-        console.log('REQUEST BODY!!!', req.body)
+       const selectedWordsIds = req.body;
+       const selectedWordsAmount = selectedWordsIds.length;
+       const needWordsForMixing = selectedWordsAmount * 6; // зробити, щоб налаштовувати величину карток
+
+            Word.find({}, {__v: 0}, (err, allWords) => {
+                const randomWordsForMixing = getRandomElementsById(allWords, needWordsForMixing, selectedWordsIds);
+
+                Word.find({'_id': {$in: randomWordsForMixing}}, (err, wordsForMixing) => {
+                    Word.find({'_id': {$in: selectedWordsIds}}, {__v: 0}, (err, selectedWords) => {
+                        const scheduleTaskCard = educationPlanCreator(selectedWords); //тут не треба дублювати переклади просто айдішніки і особливості завдання
+                        const variantList = taskCardCreator(scheduleTaskCard, wordsForMixing);
+                        const responseObject = {
+                            variantList,
+                            scheduleTaskCard
+                        }
+                        res.send(responseObject)
+                    })
+                })
+            })
    })
+
+
+app.route('/taskLatter')
+   .post((req, res) => {
+        const selectedWordsIds = req.body
+        Word.find({'_id': {$in: selectedWordsIds}})
+            .then(selectedWords => {
+                const scheduleTaskCard = educationPlanCreator(selectedWords);
+                const tasks = scheduleTaskCard.map(word => mixingElements([...word[word.answerLang]]))
+                const responseObject = {
+                    scheduleTaskCard,
+                    tasks
+                }
+                res.json(responseObject)
+            })
+   })
+
+
+
+
+// Word.find({}) //! recycle! why???
+//     .then(words => {
+//         const randomWords = getRandomElementsById(words, 6, ['2dwe']);
+//         console.log(randomWords)
+//         return randomWords
+//     })
+//     .then(randomWordsIds => {
+//         return Word.find({'_id': {$in: randomWordsIds}}) //!!!!!!
+//     })
+//     .then(randomWords => {
+//         let ids = randomWords.map(el => el._id);
+
+//         // console.log(randomWords)
+//         const toJson = JSON.stringify(ids, null, 2)
+//         fs.writeFile('words.json', toJson,'utf-8', () => {
+//             return
+//         })
+//         return 
+//     })
 
 app.route('/trainingResult')
    .post((req, res) => {
-       console.log(req.body[0])
+        console.log('trainingResult', req.body)
         const result = req.body.reduce((acc, el, idx, arr) => {
             if(el.trainingId === '001') {
                 if(el.isSkipped) {
@@ -323,22 +379,34 @@ app.route('/trainingResult')
             }
 
         }, [])
-
-       res.send(result)
+        console.log(result)
+    //    res.send(result)
+        res.send(req.body)
 
    })
 
 
 app.route('/userVocabulary')
     .get((req, res) => {
-        Wordsset.find({'serviceInfo.setName':'city'}, {_id:0}, (err, data) => { //!от як шукати в підпапках
-            res.json(data[0].words)
+        const userId = req.query.userid;
+        Users.findById(userId, (err, user) => {
+            Word.find({'_id': {$in: user.vocabulary}}, (err, words) => {
+                res.json(words)
+            })
         })
     })
 
     .post((req, res) => {
-        if(req.body) {
-            res.send({responseCode: 1})
+        const userId = req.body.userId;
+        const wordId = req.body.wordId;
+
+        if(userId && wordId) {
+            Users.findByIdAndUpdate(userId, {'vocabulary': ['hello world']}, {new: true}, (err, data) => {
+                console.log('POST', data)
+            return res.send({responseCode: 1})
+
+            })
+            return
         }
 
         res.send({responseCode: 0})
@@ -355,7 +423,6 @@ app.route('/userVocabulary')
 
 app.route('/userWordSet')
    .post((req, res) => {
-       console.log(req.body)
        if(req.body) {
            const payload = [
                {
@@ -363,7 +430,6 @@ app.route('/userWordSet')
                   words: [...req.body.words]
                 }
            ]
-           console.log(payload)
            res.send({responseCode: 1, payload})
            res.end()
        }

@@ -25,8 +25,9 @@ const educationObjectsCreator = function(words) {
             {
                 word: el,
                 taskLanguages: [
-                    {...el, answerLang: 'eng', questionLang: 'ukr', trainingId: '001', isShow: false},
-                    {...el, answerLang: 'ukr', questionLang: 'eng', trainingId: '002', isShow: false},
+                    {_id: el._id, ukr: el.ukr, eng: el.eng , answerLang: 'eng', questionLang: 'ukr', trainingId: '001', isShow: false},
+                    {_id: el._id, ukr: el.ukr, eng: el.eng, answerLang: 'ukr', questionLang: 'eng', trainingId: '002', isShow: false},
+
                 ]
             })
         
