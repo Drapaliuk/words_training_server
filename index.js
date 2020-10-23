@@ -291,6 +291,19 @@ app.route('/mixWords/') //!remake to post with ids of selected words
         })
    })
 
+app.route('/mixTasks')
+   .post((req, res) => {
+    const selectedWordsIds = req.body;
+    const selectedWordsAmount = selectedWordsIds.length;
+    const needWordsForMixing = selectedWordsAmount * 3;
+
+    Word.find({}, {__v})
+        .then(wordsForMixing => {
+            
+        })
+
+   })   
+
 app.route('/taskCards')
    .post((req, res) => {
        const selectedWordsIds = req.body;
@@ -317,15 +330,19 @@ app.route('/taskCards')
 
 app.route('/taskLatter')
    .post((req, res) => {
-        const selectedWordsIds = req.body
+        const selectedWordsIds = req.body;
+        console.log('asdasdasdasd', selectedWordsIds);
+        
         Word.find({'_id': {$in: selectedWordsIds}})
             .then(selectedWords => {
                 const scheduleTaskCard = educationPlanCreator(selectedWords);
-                const tasks = scheduleTaskCard.map(word => mixingElements([...word[word.answerLang]]))
+                const tasks = scheduleTaskCard.map(word => mixingElements([...word[word.answerLang]]));
                 const responseObject = {
                     scheduleTaskCard,
                     tasks
                 }
+
+
                 res.json(responseObject)
             })
    })
