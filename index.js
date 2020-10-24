@@ -297,11 +297,38 @@ app.route('/mixTasks')
     const selectedWordsAmount = selectedWordsIds.length;
     const needWordsForMixing = selectedWordsAmount * 3;
 
-    Word.find({}, {__v})
-        .then(wordsForMixing => {
-            
+    Word.find({'_id': {$in: selectedWordsIds}}, {__v: 0})
+        .then(selectedWords => {
+            console.log(selectedWords)
+            const scheduleTaskCard = educationPlanCreator(selectedWords);
+            return scheduleTaskCard
         })
+        .then(scheduleTaskCard => {
+            Word.find({}, {__v: 0}).then(allWords => {
+                const wordsForMixingIds = getRandomElementsById(allWords, needWordsForMixing, selectedWordsIds)
+                Word.find({'_id': {$in: wordsForMixingIds}})
+                    .then(wordsForMixing => {
+                        const tasks = scheduleTaskCard.map(taskObject => {
+                            if(taskObject.trainingId === '001') {
+                                const tasks = taskCardCreator([taskObject], wordsForMixing)
+                                return tasks[0]
+                            }
+        
+                            if(taskObject.trainingId === '002') {
+                                return mixingElements([...taskObject[taskObject.answerLang]]) 
+                            }
+                        })
 
+                        const responseObject = {
+                            tasks,
+                            scheduleTaskCard
+                        }
+
+                        res.send(responseObject)
+                        return
+                    })
+            })
+        })
    })   
 
 app.route('/taskCards')
@@ -406,8 +433,13 @@ app.route('/trainingResult')
 app.route('/userVocabulary')
     .get((req, res) => {
         const userId = req.query.userid;
-        Users.findById(userId, (err, user) => {
-            Word.find({'_id': {$in: user.vocabulary}}, (err, words) => {
+        console.log(userId)
+
+        Users.findById({'_id': userId}, (err, user) => {
+            console.log('user', user.vocabulary)
+            const userVocabularyIds = user.vocabulary
+            Word.find({'_id': {$in: userVocabularyIds}}, (err, words) => {
+                console.log(words)
                 res.json(words)
             })
         })
@@ -418,10 +450,13 @@ app.route('/userVocabulary')
         const wordId = req.body.wordId;
 
         if(userId && wordId) {
-            Users.findByIdAndUpdate(userId, {'vocabulary': ['hello world']}, {new: true}, (err, data) => {
+            Users.findByIdAndUpdate({'_id': userId}, {$push: {'vocabulary': wordId} }, {new: true}, (err, data) => {
                 console.log('POST', data)
-            return res.send({responseCode: 1})
-
+            return res.send({
+                              responseCode: 1,
+                              message: `${wordId} had saved`
+                            
+                            })
             })
             return
         }
@@ -430,6 +465,16 @@ app.route('/userVocabulary')
     })
     
     .delete((req, res) => {
+        const userId = '5f8a3ab15c690828c0778a43';
+        const wordId = req.body.wordId;
+        console.log(req.body)
+        Users.findByIdAndUpdate({'_id': userId}, {$pull: {'vocabulary': wordId}}, {new: true}, (err, data, q) => {
+            return res.send({
+                        responseCode: 1,
+                        message: `${wordId} had deleted`
+                    })
+
+        })
         if(req.body) {
             res.send({responseCode: 1})
         }
