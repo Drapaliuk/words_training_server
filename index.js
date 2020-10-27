@@ -125,7 +125,8 @@ const userSchema = new mongoose.Schema({
         country: String,
         town: String,
     },
-    vocabulary: []
+    vocabulary: [],
+    pausedTrainings: []
 })
 
 const Users = mongoose.model('users', userSchema);
@@ -146,6 +147,59 @@ const errors = (req, res) => {
 
 
 
+app.route('/trainingpause')
+   .post((req, res) => {
+       const userId = req.body.userId;
+       const postData = req.body.data;
+       Users.findByIdAndUpdate(userId, {'pausedTrainings': {$push: postData}}, {new: true}, (data) => {
+            console.log(data)
+            const responseObject = {
+                responseCode: 1,
+                message: 'training  had paused';
+            }
+            res.send(responseObject)
+       })
+   })
+
+   .get((req, res) => {
+    const userId = req.query.userId;
+    const pausedTrainingId = req.query.pausedTrainingId
+    Users.findById(userId, {__v: 0})
+         .then((userObject) => {
+             const { pausedTrainings } = userObject;
+             const pausedTraining = pausedTrainings.find(el => el._id === pausedTrainingId);
+             res.send(pausedTraining)
+         });
+   })
+
+   .delete((req, res) => {
+    const userId = '5f8a3ab15c690828c0778a43';
+    const pausedTrainingId = req.body.pausedTrainingId;
+    Users.findByIdAndUpdate(userId, {$pull: {'pausedTrainings': pausedTrainingId}}, {new: true})
+         .then(data => {
+             console.log(data)
+             const responseObject = {
+                 responseCode: 1,
+                 message: 'paused training had deleted'
+             }
+             res.send(responseObject)
+
+         })
+})
+
+Users.findByIdAndUpdate({'_id': userId}, {$pull: {'vocabulary': wordId}}, {new: true}, (err, data, q) => {
+   
+
+app.route('/trainingpause/list')
+   .get((req, res) => {
+        const userId = req.query.userId;
+        Users.findById(userId, {__v: 0})
+             .then((userObject) => {
+                 const { pausedTrainings } = userObject;
+                 res.send(pausedTrainings)
+             })
+   })
+
 
 
 
@@ -158,6 +212,7 @@ app.route('/userbiography')
             return res.send({responseCode: 1})
         })
    })
+
 
    .get((req, res) => {
        const userId = req.query.userid;
@@ -465,7 +520,6 @@ app.route('/userVocabulary')
     .delete((req, res) => {
         const userId = '5f8a3ab15c690828c0778a43';
         const wordId = req.body.wordId;
-        console.log('req.body!!!', req.body)
         Users.findByIdAndUpdate({'_id': userId}, {$pull: {'vocabulary': wordId}}, {new: true}, (err, data, q) => {
             return res.send({
                         responseCode: 1,
