@@ -15,6 +15,7 @@ const DBname = 'wordtrainer';
 const getRandomElementsById = require('./logic/getRandomElementsById');
 const taskCardCreator = require('./logic/taskCardCreator');
 const mixingElements = require('./logic/mixingElements');
+const session = require('express-session');
 
 
 const port = 8888;
@@ -255,12 +256,12 @@ app.route('/signin')
 
 app.route('/words')
     .get((req, res) => {
-        let kitName = req.query.setname
+        let kitName = req.query.setname;
+
         WordKit.find({'serviceInfo.name': kitName}, (err, data) => { //!повертає слова певного набору
             const wordsId = data[0].words
             Word.find({'_id': {$in: wordsId}}, {__v: 0}, (err, data) => {
                 res.json(data)
-
             })
         })
     })
@@ -433,14 +434,11 @@ app.route('/trainingResult')
 app.route('/userVocabulary')
     .get((req, res) => {
         const userId = req.query.userid;
-        console.log(userId)
-
         Users.findById({'_id': userId}, (err, user) => {
-            console.log('user', user.vocabulary)
-            const userVocabularyIds = user.vocabulary
-            Word.find({'_id': {$in: userVocabularyIds}}, (err, words) => {
-                console.log(words)
-                res.json(words)
+            const userVocabularyIds = user.vocabulary;
+            console.log('userVocabularyIds', userVocabularyIds)
+            Word.find({'_id': {$in: userVocabularyIds}}, (err, vocabularyWords) => {
+                res.send(vocabularyWords)
             })
         })
     })
@@ -454,8 +452,8 @@ app.route('/userVocabulary')
                 console.log('POST', data)
             return res.send({
                               responseCode: 1,
-                              message: `${wordId} had saved`
-                            
+                              message: `${wordId} had saved`,
+                              savedWordId: wordId
                             })
             })
             return
@@ -467,18 +465,15 @@ app.route('/userVocabulary')
     .delete((req, res) => {
         const userId = '5f8a3ab15c690828c0778a43';
         const wordId = req.body.wordId;
-        console.log(req.body)
+        console.log('req.body!!!', req.body)
         Users.findByIdAndUpdate({'_id': userId}, {$pull: {'vocabulary': wordId}}, {new: true}, (err, data, q) => {
             return res.send({
                         responseCode: 1,
-                        message: `${wordId} had deleted`
+                        message: `${wordId} had deleted`,
+                        deletedWordId: wordId
                     })
 
         })
-        if(req.body) {
-            res.send({responseCode: 1})
-        }
-        res.send({responseCode: 0})
     })
 
 
