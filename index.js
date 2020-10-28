@@ -104,7 +104,10 @@ WordKit.find({}, {__v: 0, words: 0}, (err, data) => { //! повертає ко�
     // console.log(data)
 })
 
-
+const pausedTrainingSchema = new mongoose.Schema({
+    timestamp: Date,
+    data: Object
+})
 
 const userSchema = new mongoose.Schema({
     login: String,
@@ -126,7 +129,7 @@ const userSchema = new mongoose.Schema({
         town: String,
     },
     vocabulary: [],
-    pausedTrainings: []
+    pausedTrainings: [pausedTrainingSchema]
 })
 
 const Users = mongoose.model('users', userSchema);
@@ -146,16 +149,17 @@ const errors = (req, res) => {
 }
 
 
-
 app.route('/trainingpause')
    .post((req, res) => {
        const userId = req.body.userId;
-       const postData = req.body.data;
-       Users.findByIdAndUpdate(userId, {'pausedTrainings': {$push: postData}}, {new: true}, (data) => {
+       const postData = req.body.pausedTrainingData;
+       const data = {data: req.body.pausedTrainingData, timestamp: Date.now()}
+       console.log('postData', postData)
+       Users.findByIdAndUpdate(userId, {$push: {'pausedTrainings': data}}, {new: true}, (err, data) => {
             console.log(data)
             const responseObject = {
                 responseCode: 1,
-                message: 'training  had paused';
+                message: 'training had paused'
             }
             res.send(responseObject)
        })
@@ -187,10 +191,9 @@ app.route('/trainingpause')
          })
 })
 
-Users.findByIdAndUpdate({'_id': userId}, {$pull: {'vocabulary': wordId}}, {new: true}, (err, data, q) => {
    
 
-app.route('/trainingpause/list')
+app.route('/trainingpause/all')
    .get((req, res) => {
         const userId = req.query.userId;
         Users.findById(userId, {__v: 0})
