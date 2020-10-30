@@ -195,11 +195,17 @@ app.route('/trainingpause')
 
 app.route('/trainingpause/all')
    .get((req, res) => {
-        const userId = req.query.userId;
+        const userId = '5f98c2e149d2ee18a0e950ec';
+        console.log(userId)
         Users.findById(userId, {__v: 0})
              .then((userObject) => {
                  const { pausedTrainings } = userObject;
-                 res.send(pausedTrainings)
+                 const responseObject = {
+                     responseCode: 1,
+                     serverPayload: pausedTrainings
+                 }
+                 console.log(responseObject)
+                 res.send(responseObject)
              })
    })
 
