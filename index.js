@@ -153,7 +153,7 @@ app.route('/trainingpause')
    .post((req, res) => {
        const userId = req.body.userId;
        const postData = req.body.pausedTrainingData;
-       const data = {data: req.body.pausedTrainingData, timestamp: Date.now()}
+       const data = {data: req.body.pausedTrainingData}
        console.log('postData', postData)
        Users.findByIdAndUpdate(userId, {$push: {'pausedTrainings': data}}, {new: true}, (err, data) => {
             console.log(data)
@@ -195,10 +195,11 @@ app.route('/trainingpause')
 
 app.route('/trainingpause/all')
    .get((req, res) => {
-        const userId = '5f98c2e149d2ee18a0e950ec';
+        const userId = req.query.userid;
         console.log(userId)
         Users.findById(userId, {__v: 0})
              .then((userObject) => {
+                 console.log(userObject)
                  const { pausedTrainings } = userObject;
                  const responseObject = {
                      responseCode: 1,
