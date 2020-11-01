@@ -106,7 +106,8 @@ WordKit.find({}, {__v: 0, words: 0}, (err, data) => { //! повертає ко�
 
 const pausedTrainingSchema = new mongoose.Schema({
     timestamp: Date,
-    data: Object
+    data: Object,
+    serviceInfo: Object
 })
 
 const userSchema = new mongoose.Schema({
@@ -150,12 +151,14 @@ const errors = (req, res) => {
 
 
 app.route('/trainingpause')
-   .post((req, res) => {
-       const userId = req.body.userId;
-       const postData = req.body.pausedTrainingData;
-       const data = {data: req.body.pausedTrainingData}
-       console.log('postData', postData)
-       Users.findByIdAndUpdate(userId, {$push: {'pausedTrainings': data}}, {new: true}, (err, data) => {
+   .post((req, res) => { 
+       const {userId, pausedTrainingData} = req.body;
+        console.log('pausedTrainingData', pausedTrainingData)
+    //    const postData = req.body.pausedTrainingData;
+    //    const data = {data: req.body.pausedTrainingData}
+    //    const r = {}
+    //    console.log('postData', postData)
+       Users.findByIdAndUpdate(userId, {$push: {'pausedTrainings': pausedTrainingData}}, {new: true}, (err, data) => {
             console.log(data)
             const responseObject = {
                 responseCode: 1,
@@ -168,17 +171,22 @@ app.route('/trainingpause')
    .get((req, res) => {
     const userId = req.query.userId;
     const pausedTrainingId = req.query.pausedTrainingId
+    console.log('------------------------------------------------')
+    console.log(req.query)
+
     Users.findById(userId, {__v: 0})
          .then((userObject) => {
              const { pausedTrainings } = userObject;
-             const pausedTraining = pausedTrainings.find(el => el._id === pausedTrainingId);
+             const pausedTraining = pausedTrainings.find(el => el._id.toString() === pausedTrainingId);
+             console.log(pausedTraining)
              res.send(pausedTraining)
          });
    })
 
    .delete((req, res) => {
-    const userId = '5f8a3ab15c690828c0778a43';
-    const pausedTrainingId = req.body.pausedTrainingId;
+    const { userId, pausedTrainingId } = req.body;
+    
+    console.log(userId, pausedTrainingId)
     Users.findByIdAndUpdate(userId, {$pull: {'pausedTrainings': pausedTrainingId}}, {new: true})
          .then(data => {
              console.log(data)
@@ -201,11 +209,14 @@ app.route('/trainingpause/all')
              .then((userObject) => {
                  console.log(userObject)
                  const { pausedTrainings } = userObject;
+                 const pausedTrainingMainServiceInfo = pausedTrainings.map(el => {
+                     const {_id, serviceInfo } = el
+                     return {_id, serviceInfo}
+                 })
                  const responseObject = {
                      responseCode: 1,
-                     serverPayload: pausedTrainings
+                     serverPayload: pausedTrainingMainServiceInfo
                  }
-                 console.log(responseObject)
                  res.send(responseObject)
              })
    })
