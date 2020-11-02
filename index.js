@@ -186,13 +186,15 @@ app.route('/trainingpause')
    .delete((req, res) => {
     const { userId, pausedTrainingId } = req.body;
     
-    console.log(userId, pausedTrainingId)
-    Users.findByIdAndUpdate(userId, {$pull: {'pausedTrainings': pausedTrainingId}}, {new: true})
+    console.log(userId)
+    console.log(pausedTrainingId)
+    Users.findByIdAndUpdate(userId, {$pull: {'pausedTrainings': {_id: pausedTrainingId}}}, {new: true})
          .then(data => {
-             console.log(data)
+            //  console.log(data)
              const responseObject = {
                  responseCode: 1,
-                 message: 'paused training had deleted'
+                 message: 'paused training had deleted!',
+                 deletedPausedTrainingId: pausedTrainingId
              }
              res.send(responseObject)
 
