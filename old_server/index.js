@@ -26,7 +26,7 @@ const words2 = [
 
 const a = 1;
 
-mongoose.connect('mongodb://localhost:27017', {
+const y = mongoose.connect('mongodb://localhost:27017', {
         useNewUrlParser: true, 
         dbName: DBname,
         useCreateIndex: true,
@@ -38,6 +38,8 @@ mongoose.connect('mongodb://localhost:27017', {
     .catch((error) => {
         console.log('fuck some problem with connecting, you are not connected to db')
     })
+
+
 
 const db = mongoose.connection
 
