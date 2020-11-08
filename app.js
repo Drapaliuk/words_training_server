@@ -3,9 +3,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-
 const indexRouter = require('./routes/index');
-
 const profileSettingsRouter = require('./routes/profile_settings/profile_settings');
 const personalDataRouter = require('./routes/user_personal_data/user_personal_data');
 const wordsForTrainingRouter = require('./routes/words_for_training/words_for_training');
@@ -17,20 +15,31 @@ const trainingpauseRouter = require('./routes/training_pause/training_pause');
 const loginRouter = require('./routes/login/login');
 const signinRouter = require('./routes/signin/signin');
 const userWordKitRouter = require('./routes/user_wordkits/user_wordkits');
-
 const taskLetterRouter = require('./routes/task_latter/task_latter');
 const taskCardsRouter = require('./routes/task_cards/task_cards');
 const mixTasksRouter = require('./routes/mix_tasks/mix_tasks');
 const cors = require('cors');
-
-
-
-
+const passport = require('passport');
+// const sessionConfigs = require('./authentication/session-configs');
+require('./authentication/passport-configs');
+const session = require('express-session');
+const FileStore = require('session-file-store')(session)
 var app = express();
 
+const sessionConfigs = {
+  secret: 'hghtyNN23h',
+  store: new FileStore(),
+  cookie: {
+    path: '/',
+    httpOnly: true,
+    maxAge: 60 * 60 * 1000,
+  },
+  resave: false,
+  saveUninitialized: false,
+}
 
 
-// view engine setup
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(logger('dev'));
@@ -39,6 +48,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
+app.use(session(sessionConfigs));
+
 
 
 app.use('/', indexRouter);
@@ -51,21 +62,44 @@ app.use('/trainingResult', trainingResultRouter);//* +
 app.use('/vocabularyTest', knowledgeTestRouter); //* + rename endpoint
 app.use('/trainingpause', trainingpauseRouter); //* +
 app.use('/setsNames', wordKitsRouter); //* +
-app.use('/login', loginRouter); //* +
+// app.use('/login', loginRouter); //* +
 app.use('/signin', signinRouter); //* +
 app.use('/taskLatter', taskLetterRouter); //* +
 app.use('/taskCards', taskCardsRouter); //* +
 app.use('/mixTasks', mixTasksRouter); //* +
+app.use(passport.initialize());
+app.use(passport.session());
 
 
-// catch 404 and forward to error handler
+
+
+app.post('/login', (req, res, next) => {
+  console.log(req.session)
+
+  passport.authenticate('local', function(err, user) {
+    if (err) return next(err);
+    if (!user) return res.send('Укажите правильный email или пароль!');
+
+    req.logIn(user, (err) => {
+      if (err) return next(err);
+      return res.send('logined');
+    });
+  })(req, res, next);
+});
+
+
+
+
+
+
 app.use(function(req, res, next) {
+  // catch 404 and forward to error handler
   next(createError(404));
 });
 
-// error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
+    // error handler
+    // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 

@@ -4,17 +4,17 @@ const params = require('./params/params');
 
 mongoose.connect('mongodb://localhost:27017', params)
     .catch((error) => {
-        console.log('some problem with connecting, you are not connected to db')
+        console.log('you are not connected to db')
     })
 
 const db = mongoose.connection
 
 db.once('open', () => {
-    console.log(`connected to ${params.dbName}`)
+    console.log(`Connected to DB (db_name: ${params.dbName})`)
 })
 
 db.on('error', () => {
-    console.log('you are connected to db? but you have some problem with current connection')
+    console.log('you have some problem with current connection')
 })
 
 

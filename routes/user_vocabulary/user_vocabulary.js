@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const User = require('../../db/models/user/user_model');
+const Word = require('../../db/models/word/word_model');
 
 router.get('/', (req, res) => {
         const userId = req.query.userid;
