@@ -29,7 +29,6 @@ const userSchema = new mongoose.Schema({
     savedWordsKits: [wordsKitSchema] 
 });
 
-// userSchema.plugin(passportLocalMongoose)
 
 // userSchema.methods.validPassword = function(deliveredPassword) {
 //     return bcrypt.compare(deliveredPassword, this.password, (err, result) => {

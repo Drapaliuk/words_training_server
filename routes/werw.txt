@@ -1,0 +1,5 @@
+зробити от так
+/auth/login
+/auth/logout
+/auth/signin
+/auth/refresh
