@@ -1,4 +1,4 @@
-var express = require('express')
+var express = require('express');
 var router = express.Router();
 const Word = require('../../db/models/word/word_model');
 const educationPlanCreator = require('../../utils/create_education_plan/create_education_plan');

@@ -1,30 +1,32 @@
 const mongoose = require('mongoose');
-const RefreshTokenModel = require('../../db/models/refresh_token/refresh_token');
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
+const jsonwebtoken = require('jsonwebtoken');
 const { v4: uuid } = require('uuid');
 const RefreshTokenModel = require('../../db/models/refresh_token/refresh_token');
 
-
-
-const middleware = async function(req, res) {
+const middleware = async function(req, res, next) {
     const {refreshToken} = req.body
     const dbToken = await RefreshTokenModel.findOne({token: refreshToken}) 
     if(!dbToken) {
-        return;
+        const err = {
+                name: 'UnauthorizedError',
+                errCode: 'invalid_refresh_token',
+            }
+        return next(err, req, res, next)
     }
 
     const newRefreshToken = uuid();
-    const accessToken = jwt.sign({id: dbToken.userId});
+    const newAccessToken = jsonwebtoken.sign({id: dbToken.userId});
     await RefreshTokenModel.findOneAndUpdate({userId: dbToken.userId}, {token: newRefreshToken}) //перевірити чи працює
-    res.json({
-        token: accessToken,
+    return res.json({
+        responseCode: 1,
+        message: 'You got new access and refresh tokens',
+        token: newAccessToken,
         refreshToken: newRefreshToken
     })
-}   
+}  
 
-
-router.use('/', middleware)
+router.post('/', middleware)
 
 module.exports = router;

@@ -12,19 +12,20 @@ const middleware = async function(req, res) {
     const login = req.body.login;
     const password = req.body.password;
     console.log(req.body)
-    const candidate = await User.findOne({login: login });
+    const user = await User.findOne({login: login });
 
-    if(candidate) {
-        const passwordResult = bcrypt.compareSync(password, candidate.password);
+    if(user) {
+        const passwordResult = bcrypt.compareSync(password, user.password);
         if(passwordResult) {
-            const token = jwt.sign({id: candidate._id}, jwtKey, {expiresIn: 1});
+            const token = jwt.sign({id: user._id}, jwtKey, {expiresIn: 120});
             const refreshToken = uuid()
-            RefreshTokenModel.create({userId: candidate._id, token: refreshToken});
+            RefreshTokenModel.create({userId: user._id, token: refreshToken});
 
             res.status(200).json({
                 responseCode: 1,
                 message: 'Password had matched',
                 token: `Bearer ${token}`,
+                userId: user._id,
                 refreshToken
             })
         } else {

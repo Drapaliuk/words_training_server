@@ -13,11 +13,14 @@ const middleware = async function(req, res) {
     
     RefreshTokenModel.findOneAndDelete({token: refreshToken})
                      .then(result => {
-                         if(!result) return res.send({responseCode: 1, message: 'user had logout'})
-                         return 
+                         console.log(result)
+                         if(!result) return res.status(200).json({responseCode: 1, message: 'user had logout'})
+                         return //! ?
                      })
 }
 
-router.post('/', jwtMiddleware({secret: jwtKey}),  middleware);
+router.post('/', middleware);
+
+// router.post('/', jwtMiddleware({secret: jwtKey, algorithms: ['HS256']}),  middleware);
 
 module.exports = router;

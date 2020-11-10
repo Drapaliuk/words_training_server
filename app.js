@@ -26,7 +26,10 @@ const FileStore = require('session-file-store')(session);
 const expressJwtMiddleware = require('express-jwt');
 const {jwt: jwtKey} = require('./config/keys');
 const refreshTokenRouter = require('./routes/refresh_token/refresh_token');
-const logoutRouter = require('./routes/logout/logout')
+const logoutRouter = require('./routes/logout/logout');
+const isAuthorizationRouter = require('./routes/is_authorization/is_authorization');
+const jwt = require('express-jwt');
+const jwtLib = require('jsonwebtoken')
 var app = express();
 
 
@@ -56,6 +59,7 @@ app.use(session(sessionConfigs));
 
 
 app.use('/', indexRouter);
+app.use('/isAuthorization', isAuthorizationRouter)
 app.use('/refreshToken', refreshTokenRouter)
 app.use('/userprofilesettings', profileSettingsRouter); //* +
 app.use('/userbiography', personalDataRouter); //* + //// rename endpoint
@@ -80,23 +84,54 @@ app.use(passport.session());
 
 
 
-// app.post('/login', (req, res, next) => {
-//   console.log(req.session)
 
-//   passport.authenticate('local', function(err, user) {
-//     if (err) return next(err);
-//     if (!user) return res.send('Укажите правильный email или пароль!');
-
-//     req.logIn(user, (err) => {
-//       if (err) return next(err);
-//       return res.send('logined');
-//     });
-//   })(req, res, next);
-// });
+app.post('/decoding', (req, res) => {
+  const token = req.headers.authorization;
+  const decoded = jwtLib.verify(token, jwtKey)
+  // const decodedDate = 
+  // console.log(decodedDate)
+  console.log(decoded)
+  res.send('jwt')
+});
 
 
 
+app.use(function (err, req, res, next) {
+  console.log('error', err)
 
+  if (err.name === 'UnauthorizedError') {
+
+    if(err.code === 'invalid_refresh_token') {
+      return res.status(401).json({
+        message: 'Your refresh token is invalid',
+        responseCode: 4,
+        errCode: err.code
+      })
+    }
+
+    if(err.message === 'jwt expired') {
+       return res.status(401).json({
+         message: `Your access token has been expired, please send refresh token for restoration your access`,
+         errorCode: 'expired_token',
+         responseCode: 0
+       })
+    }
+
+    if(err.code === 'credentials_bad_format') {
+      return res.status(401).json({
+        message: 'Your access token has invalid format',
+        errorCode: err.code,
+        responseCode: 2
+      })
+    }
+
+    return res.status(401).json({
+      message: 'Your access token is invalid',
+      errorCode: err.code,
+      responseCode: 3
+    })
+  }
+});
 
 
 app.use(function(req, res, next) {

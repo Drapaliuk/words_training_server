@@ -25,7 +25,7 @@ const middleware = (req, res) => {
                         User.create(userObject, (err, createdUser ) => {
                           if(err) res.send({responseCode: 3, errMessage: err});
                             const refreshToken = uuid()
-                            const token = jwt.sign({id: createdUser._id}, jwtKey, {expiresIn: 60 * 60});
+                            const token = jwt.sign({id: createdUser._id}, jwtKey, {expiresIn: 120});
                             RefreshTokenModel.create({userId: createdUser._id, token: refreshToken})
                             return res.send({
                                 responseCode: 1,
