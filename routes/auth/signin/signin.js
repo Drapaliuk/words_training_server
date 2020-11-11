@@ -1,11 +1,9 @@
-var express = require('express');
-var router = express.Router();
-const User = require('../../db/models/user/user_model');
+const User = require('../../../db/models/user/user_model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
-const {jwt: jwtKey} = require('../../config/keys');
+const {jwt: jwtKey} = require('../../../config/keys');
 const { v4: uuid } = require('uuid');
-const RefreshTokenModel = require('../../db/models/refresh_token/refresh_token');
+const RefreshTokenModel = require('../../../db/models/refresh_token/refresh_token');
 
 const middleware = (req, res) => {
     const login = req.body.login;
@@ -25,12 +23,12 @@ const middleware = (req, res) => {
                         User.create(userObject, (err, createdUser ) => {
                           if(err) res.send({responseCode: 3, errMessage: err});
                             const refreshToken = uuid()
-                            const token = jwt.sign({id: createdUser._id}, jwtKey, {expiresIn: 120});
+                            const token = jwt.sign({id: createdUser._id}, jwtKey, {expiresIn: 5});
                             RefreshTokenModel.create({userId: createdUser._id, token: refreshToken})
                             return res.send({
                                 responseCode: 1,
                                 message: 'user has created',
-                                errMessage: err,
+                                err: err,
                                 userId: createdUser._id,
                                 token: `Bearer ${token}`,
                                 refreshToken
@@ -39,14 +37,14 @@ const middleware = (req, res) => {
                     })
                 return
            } else {
-               return res.send({
-                responseCode: 2,
-                message: 'this login has already in use',
-                errMessage: err
+               return res.status(406).send({
+                responseCode: 0,
+                message: 'This login has already in use',
+                errMessage: err,
+                errCode: 'login_in_use'
             })
            }
         })
 }
 
-router.post('/', middleware)
-module.exports = router;
+module.exports = middleware;

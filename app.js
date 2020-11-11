@@ -3,7 +3,6 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const indexRouter = require('./routes/index');
 const profileSettingsRouter = require('./routes/profile_settings/profile_settings');
 const personalDataRouter = require('./routes/user_personal_data/user_personal_data');
 const wordsForTrainingRouter = require('./routes/words_for_training/words_for_training');
@@ -12,24 +11,20 @@ const userVocabularyRouter = require('./routes/user_vocabulary/user_vocabulary')
 const trainingResultRouter = require('./routes/training_result/training_result');
 const knowledgeTestRouter = require('./routes/knowledge_test/knowledge_test');
 const trainingpauseRouter = require('./routes/training_pause/training_pause');
-const loginRouter = require('./routes/login/login');
-const signinRouter = require('./routes/signin/signin');
 const userWordKitRouter = require('./routes/user_wordkits/user_wordkits');
 const taskLetterRouter = require('./routes/task_latter/task_latter');
 const taskCardsRouter = require('./routes/task_cards/task_cards');
 const mixTasksRouter = require('./routes/mix_tasks/mix_tasks');
+
+
+const authRouter = require('./routes/auth/router');
+
+
 const cors = require('cors');
 const passport = require('passport');
 require('./authentication/passport-configs');
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
-const expressJwtMiddleware = require('express-jwt');
-const {jwt: jwtKey} = require('./config/keys');
-const refreshTokenRouter = require('./routes/refresh_token/refresh_token');
-const logoutRouter = require('./routes/logout/logout');
-const isAuthorizationRouter = require('./routes/is_authorization/is_authorization');
-const jwt = require('express-jwt');
-const jwtLib = require('jsonwebtoken')
 var app = express();
 
 
@@ -58,9 +53,7 @@ app.use(cors());
 app.use(session(sessionConfigs));
 
 
-app.use('/', indexRouter);
-app.use('/isAuthorization', isAuthorizationRouter)
-app.use('/refreshToken', refreshTokenRouter)
+app.use('/auth', authRouter);
 app.use('/userprofilesettings', profileSettingsRouter); //* +
 app.use('/userbiography', personalDataRouter); //* + //// rename endpoint
 app.use('/words', wordsForTrainingRouter); //* + rename endpoint
@@ -70,29 +63,11 @@ app.use('/trainingResult', trainingResultRouter);//* +
 app.use('/vocabularyTest', knowledgeTestRouter); //* + rename endpoint
 app.use('/trainingpause', trainingpauseRouter); //* +
 app.use('/setsNames', wordKitsRouter); //* +
-app.use('/login', loginRouter); //* +
-app.use('/signin', signinRouter); //* +
 app.use('/taskLatter', taskLetterRouter); //* +
 app.use('/taskCards', taskCardsRouter); //* +
 app.use('/mixTasks', mixTasksRouter); //* +
-app.use('/logout', logoutRouter)
 app.use(passport.initialize());
 app.use(passport.session());
-
-
-
-
-
-
-
-app.post('/decoding', (req, res) => {
-  const token = req.headers.authorization;
-  const decoded = jwtLib.verify(token, jwtKey)
-  // const decodedDate = 
-  // console.log(decodedDate)
-  console.log(decoded)
-  res.send('jwt')
-});
 
 
 
