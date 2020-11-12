@@ -6,7 +6,8 @@ const authTokenManipulator = require('../../../utils/auth_token_manipulator/auth
 
 const middleware = async function(req, res, next) {
     const {refreshToken} = req.body
-    const dbToken = await RefreshTokenModel.findOne({token: refreshToken}) 
+    const dbToken = await RefreshTokenModel.findOne({token: refreshToken});
+    console.log('db token', dbToken)
     if(!dbToken) {
         const err = {
                 name: 'UnauthorizedError',
@@ -19,11 +20,13 @@ const middleware = async function(req, res, next) {
     const newAccessToken = jsonwebtoken.sign({id: dbToken.userId}, jwtKey, {expiresIn: 5});
 
     await RefreshTokenModel.findOneAndUpdate({userId: dbToken.userId}, {token: newRefreshToken}) //перевірити чи працює
+    const {userId} = dbToken; 
     return res.json({
         responseCode: 1,
         message: 'You got new access and refresh tokens',
-        token: authTokenManipulator.addBearer(newAccessToken) ,
-        refreshToken: newRefreshToken
+        token: authTokenManipulator.addBearer(newAccessToken),
+        refreshToken: newRefreshToken,
+        userId
     })
 }  
 

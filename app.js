@@ -15,59 +15,37 @@ const userWordKitRouter = require('./routes/user_wordkits/user_wordkits');
 const taskLetterRouter = require('./routes/task_latter/task_latter');
 const taskCardsRouter = require('./routes/task_cards/task_cards');
 const mixTasksRouter = require('./routes/mix_tasks/mix_tasks');
-
-
 const authRouter = require('./routes/auth/router');
+
+const trainingsReducer = require('./routes/trainings/router');
+
+
+
+
 
 
 const cors = require('cors');
-const passport = require('passport');
-require('./authentication/passport-configs');
 const session = require('express-session');
-const FileStore = require('session-file-store')(session);
 var app = express();
 
-
-const sessionConfigs = {
-  secret: 'hghtyNN23h',
-  store: new FileStore(),
-  cookie: {
-    path: '/',
-    httpOnly: true,
-    maxAge: 60 * 60 * 1000,
-  },
-  resave: false,
-  saveUninitialized: false,
-}
-
-
-// app.use(expressJwtMiddleware({secret: jwtKey, algorithms: ['HS256']}))
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
-app.use(session(sessionConfigs));
 
+app.use('/profile')
 
+app.use('/training', trainingsReducer)
 app.use('/auth', authRouter);
 app.use('/userprofilesettings', profileSettingsRouter); //* +
 app.use('/userbiography', personalDataRouter); //* + //// rename endpoint
 app.use('/words', wordsForTrainingRouter); //* + rename endpoint
 app.use('/userWordSet', userWordKitRouter); //* + rename endpoint
 app.use('/userVocabulary', userVocabularyRouter); //* +
-app.use('/trainingResult', trainingResultRouter);//* +
 app.use('/vocabularyTest', knowledgeTestRouter); //* + rename endpoint
-app.use('/trainingpause', trainingpauseRouter); //* +
 app.use('/setsNames', wordKitsRouter); //* +
-app.use('/taskLatter', taskLetterRouter); //* +
-app.use('/taskCards', taskCardsRouter); //* +
-app.use('/mixTasks', mixTasksRouter); //* +
-app.use(passport.initialize());
-app.use(passport.session());
 
 
 
