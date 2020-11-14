@@ -1,36 +1,19 @@
 const express = require('express');
 const router = express.Router()
-const resultMiddleware = require('./result/training_result'); //! перейменувати міддлвари, дуже погані назви
-const pausePostMiddleware = require('./pause/post/post_middleware');
-const pauseGetMiddleware = require('./pause/get/get_middleware');
-const pauseDeleteMiddleware = require('./pause/delete/delete_middleware');
-const pauseGetAllMiddleware = require('./pause/get_all_paused_trainings/get_all_middleware');
-const spellingTrainingMiddleware = require('./modes/task_latter/task_latter');
-const wordTrainingMiddleware = require('./modes/task_cards/task_cards');
-const mixedModeMiddleware = require('./modes/mixed_mode/mix_tasks');
+const resultMiddlewares = require('./result/result_middlewares');
+const pauseMiddlewares = require('./pause/pause_middlewares');
+const pauseGetAllMiddlewares = require('./pause/all_paused_trainings/all_paused_trainings_middlewares');
+const spellingTrainingMiddlewares = require('./modes/spelling_mode/spelling_mode_middlewares');
+const wordTrainingMiddlewares = require('./modes/words_mode/words_mode_middlewares');
+const mixedModeMiddlewares = require('./modes/mixed_mode/mixed_mode_middlewares');
 
-router.post('/results', resultMiddleware)
-      .post('/pause', pausePostMiddleware)
-      .post('/spelling', spellingTrainingMiddleware)
-      .post('/words', wordTrainingMiddleware)
-      .post('/mixedmode', mixedModeMiddleware)
-      .get('/pause', pauseGetMiddleware)
-      .get('/pause/all', pauseGetAllMiddleware)
-      .delete('/pause', pauseDeleteMiddleware)
+router.post('/results', resultMiddlewares.post)
+      .post('/pause', pauseMiddlewares.post)
+      .post('/spelling', spellingTrainingMiddlewares.post)
+      .post('/words', wordTrainingMiddlewares.post)
+      .post('/mixedmode', mixedModeMiddlewares.post)
+      .get('/pause', pauseMiddlewares.get)
+      .get('/pause/all', pauseGetAllMiddlewares.get)
+      .delete('/pause', pauseMiddlewares.delete)
 
-module.exports = router
-
-
-
-
-// router.post('/trainingResult', resultMiddleware)
-//       .post('/trainingpause', pausePostMiddleware)
-//       .post('/taskLatter', spellingTrainingMiddleware)
-//       .post('/taskCards', wordTrainingMiddleware)
-//       .post('/mixTasks', mixedModeMiddleware)
-//       .get('/trainingpause', pauseGetMiddleware)
-//       .get('/trainingpause/all', pauseGetAllMiddleware)
-//       .delete('/trainingpause', pauseDeleteMiddleware)
-
-
-
+module.exports = router;

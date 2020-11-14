@@ -3,17 +3,17 @@ const router = express.Router();
 const {jwt: jwtKey} = require('../../config/keys');
 const verifyTokenMiddleware = require('express-jwt');
 
-const isAuthorizationMiddleware = require('./is_authorization/is_authorization');
-const signinMiddleware = require('./signin/signin');
-const refreshTokenMiddleware = require('./refresh_token/refresh_token');
-const loginMiddleware = require('./login/login');
-const logoutMiddleware = require('./logout/logout');
+const isAuthorizationMiddlewares = require('./is_authorization/is_authorization');
+const signinMiddlewares = require('./signin/signin');
+const refreshTokenMiddlewares = require('./refresh_token/refresh_token');
+const loginMiddlewares = require('./login/login');
+const logoutMiddlewares = require('./logout/logout');
 
-router.post('/signin', signinMiddleware)
-      .post('/refreshToken', refreshTokenMiddleware)
-      .post('/login', loginMiddleware)
-      .post('/logout', logoutMiddleware)
-      .get('/isAuthorization', verifyTokenMiddleware({secret: jwtKey, algorithms: ['HS256']}), isAuthorizationMiddleware)
+router.post('/signin', signinMiddlewares.post)
+      .post('/refreshToken', refreshTokenMiddlewares.post)
+      .post('/login', loginMiddlewares.post)
+      .post('/logout', logoutMiddlewares.post)
+      .get('/isAuthorization', verifyTokenMiddleware({secret: jwtKey, algorithms: ['HS256']}), isAuthorizationMiddlewares.get)
 
 
 module.exports = router;

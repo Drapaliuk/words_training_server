@@ -1,10 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const personalDataMiddlewares = require('./personal_data/personal_data_middlewares');
 
-
-router.post('/personaldata',)
-      .get('/personaldata',)
-      .post('/settings',)
-      .get('/settings',)
+router.post('/personaldata', personalDataMiddlewares.post)
+      .get('/personaldata', personalDataMiddlewares.get)
 
 module.exports = router;
