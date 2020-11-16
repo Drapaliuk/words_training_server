@@ -1,13 +1,31 @@
-const WordsKit = require('../../../db/models/words_kit/words_kit_model');
-
+const KnowledgeTestModel = require('../../../db/models/knowledge_tests/vocabulary_test_model');
+const Word = require('../../../db/models/word/word_model');
+const User = require('../../../db/models/user/user_model');
+const jsonwebtoken = require('jsonwebtoken');
+const {jwt: jwtKey} = require('../../../config/keys')
+const mixingElements = require('../../../utils/mixingElements/mixingElements');
+const { testIds } = require('../configs')
+const vocabularyTestAnalyser = require('../../../utils/knowledge_tests/vocabulary_test_results_analyser');
+const authTokenModifier = require('../../../utils/auth_token_manipulator/auth_token_manipulator');
 
 const middlewares = {
-    get: (req, res) => {
-        return res.end()
-        // WordsKit.find((err, data) => {
-        //      const oneSet = data.find((el) => el.serviceInfo.setName === 'travel');
-        //      res.send(oneSet.words)
-        // })
+    get: async (req, res) => {
+        const testWordsIds = await KnowledgeTestModel.findById(testIds.vocabulary_test)
+        const words = await Word.find({'_id': {$in: testWordsIds.words}})
+        const mixedWords = mixingElements(words) 
+        res.status(200).json(mixedWords)
+    },
+
+    post: async (req, res) => {
+        const testAnswers = req.body;
+        const authToken = authTokenModifier.deleteBearer(req.headers.authorization)  
+        const {id: userId} = jsonwebtoken.decode(authToken, jwtKey);
+        const testResult = vocabularyTestAnalyser(testAnswers)
+        const user  = await User.findByIdAndUpdate(userId, {$push: {'knowledgeTests.vocabularyTest': {...testResult, test: testAnswers}}} , {new: true});
+        console.log(user)
+        // User.findByIdAndUpdate(userId, {$push: {'pausedTrainings': pausedTrainingData}}, {new: true}, (err, data) => {
+
+        res.send(testResult)
     }
 }
   

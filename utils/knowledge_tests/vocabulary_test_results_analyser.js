@@ -1,50 +1,38 @@
-const graduation = [
-    {percentResult: {from: 0, to: 0}, category: 'A0'},
-    {percentResult: {from: 0, to: 16.6}, category: 'A1'},
-    {percentResult: {from: 16.7, to: 33.3}, category: 'A2'},
-    {percentResult: {from: 33.4, to: 49.8}, category: 'B1'},
-    {percentResult: {from: 49.9, to: 66.5}, category: 'B2'},
-    {percentResult: {from: 66.5, to: 83.1}, category: 'C1'},
-    {percentResult: {from: 83.1, to: 100}, category: 'C2'},
+const languageLevels = [
+    {percentInterval: {from: 0, to: 0}, level: 'A0'},
+    {percentInterval: {from: 0, to: 16.6}, level: 'A1'},
+    {percentInterval: {from: 16.7, to: 33.3}, level: 'A2'},
+    {percentInterval: {from: 33.4, to: 49.8}, level: 'B1'},
+    {percentInterval: {from: 49.9, to: 66.5}, level: 'B2'},
+    {percentInterval: {from: 66.5, to: 83.1}, level: 'C1'},
+    {percentInterval: {from: 83.1, to: 100}, level: 'C2'},
 ]
 
-const arr = [
-    {answer: true},
-    {answer: false},
-    {answer: false},
-    {answer: true},
-    {answer: true},
-    {answer: true},
-    {answer: true},
-]
+const positiveAnswersCounter = results => {
+    let positiveAnswers = 0;
+    const allAnswers = results.length;
+    results.forEach(el => el.answer ? positiveAnswers++ : null);
 
-
-const trueAnswerAnalyser = function(results) {
-    let trueAnswersAmount = 0;
-    const commonAmountAnswers = results.length;
-    results.forEach(el => el.answer ? trueAnswersAmount++ : null);
-
-    return {commonAmountAnswers, trueAnswersAmount}
+    return {allAnswers, positiveAnswers}
 }   
 
-
-const percentTrueAnswersAnalyser = function({trueAnswersAmount, commonAmountAnswers}) {
-    return (trueAnswersAmount / commonAmountAnswers) * 100
+const positiveAnswersPercent = ({positiveAnswers, allAnswers}) => {
+    return Math.round((positiveAnswers / allAnswers) * 100)
 }
 
-const graduationAnalyser = function(percentResult) {
-    return graduation.find(el => {
-        return percentResult >= el.percentResult.from && percentResult <= el.percentResult.to
-    } )
+const languageLevelDefine = percentInterval => {
+    const graduatedResult = languageLevels.find(el => {
+        return percentInterval >= el.percentInterval.from && percentInterval <= el.percentInterval.to
+    })
+    return {level: graduatedResult.level, percent: percentInterval}
 }
 
-const vocabularyTestAnalyser = function(testResults) {
-    const testResultsCopy = [...testResults];
-    const trueAnswersAnalysed = trueAnswerAnalyser(testResultsCopy);
-    const trueAnswersPercents = percentTrueAnswersAnalyser(trueAnswersAnalysed);
-    const knowledgeLevel = graduationAnalyser(trueAnswersPercents)
-    return knowledgeLevel
+const vocabularyTestAnalyser = testAnswers => {
+    const testAnswersCopy = [...testAnswers];
+    const languageLevel = languageLevelDefine(positiveAnswersPercent(positiveAnswersCounter(testAnswersCopy)));
+    console.log(languageLevel)
+    return languageLevel
 }
 
 
-console.log(vocabularyTestAnalyser(arr))
+module.exports = vocabularyTestAnalyser;

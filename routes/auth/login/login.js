@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {jwt: jwtKey} = require('../../../config/keys');
 const { v4: uuid } = require('uuid');
-const authTokenManipulator = require('../../../utils/auth_token_manipulator/auth_token_manipulator');
+const authTokenModifier = require('../../../utils/auth_token_manipulator/auth_token_manipulator');
 const RefreshTokenModel = require('../../../db/models/refresh_token/refresh_token');
 
 
@@ -23,7 +23,7 @@ const middlewares = {
                 res.status(200).json({
                     responseCode: 1,
                     message: 'Password had matched',
-                    token: authTokenManipulator.addBearer(authToken),
+                    token: authTokenModifier.addBearer(authToken),
                     userId: user._id,
                     refreshToken
                 })

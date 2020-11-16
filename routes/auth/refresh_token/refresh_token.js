@@ -2,7 +2,7 @@ const jsonwebtoken = require('jsonwebtoken');
 const { v4: uuid } = require('uuid');
 const RefreshTokenModel = require('../../../db/models/refresh_token/refresh_token');
 const {jwt: jwtKey} = require('../../../config/keys');
-const authTokenManipulator = require('../../../utils/auth_token_manipulator/auth_token_manipulator');
+const authTokenModifier = require('../../../utils/auth_token_manipulator/auth_token_manipulator');
 
 const middlewares = {
     post: async function(req, res, next) {
@@ -25,7 +25,7 @@ const middlewares = {
         return res.json({
             responseCode: 1,
             message: 'You got new access and refresh tokens',
-            token: authTokenManipulator.addBearer(newAccessToken),
+            token: authTokenModifier.addBearer(newAccessToken),
             refreshToken: newRefreshToken,
             userId
         })

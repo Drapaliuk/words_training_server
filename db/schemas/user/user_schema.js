@@ -26,16 +26,17 @@ const userSchema = new mongoose.Schema({
     },
     vocabulary: [],
     pausedTrainings: [pausedTrainingSchema],
-    savedWordsKits: [wordsKitSchema] 
+    savedWordsKits: [wordsKitSchema],
+    knowledgeTests: {
+        vocabularyTest: [
+            {
+                percent: Number,
+                level: String,
+                timestamp: Number,
+                test: []
+            }
+        ]
+    }
 });
-
-
-// userSchema.methods.validPassword = function(deliveredPassword) {
-//     return bcrypt.compare(deliveredPassword, this.password, (err, result) => {
-//         return result
-//     })
-// }
-
-
 
 module.exports = userSchema;
