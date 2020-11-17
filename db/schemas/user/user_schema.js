@@ -27,6 +27,9 @@ const userSchema = new mongoose.Schema({
     vocabulary: [],
     pausedTrainings: [pausedTrainingSchema],
     savedWordsKits: [wordsKitSchema],
+    knowledgeLevel: {
+        vocabularyLevel: String
+    },
     knowledgeTests: {
         vocabularyTest: [
             {

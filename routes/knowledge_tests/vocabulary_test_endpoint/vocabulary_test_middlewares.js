@@ -21,10 +21,7 @@ const middlewares = {
         const authToken = authTokenModifier.deleteBearer(req.headers.authorization)  
         const {id: userId} = jsonwebtoken.decode(authToken, jwtKey);
         const testResult = vocabularyTestAnalyser(testAnswers)
-        const user  = await User.findByIdAndUpdate(userId, {$push: {'knowledgeTests.vocabularyTest': {...testResult, test: testAnswers}}} , {new: true});
-        console.log(user)
-        // User.findByIdAndUpdate(userId, {$push: {'pausedTrainings': pausedTrainingData}}, {new: true}, (err, data) => {
-
+        User.findByIdAndUpdate(userId, {$push: {'knowledgeTests.vocabularyTest': {...testResult, test: testAnswers}}, 'knowledgeLevel.vocabularyLevel': testResult.level});
         res.send(testResult)
     }
 }
