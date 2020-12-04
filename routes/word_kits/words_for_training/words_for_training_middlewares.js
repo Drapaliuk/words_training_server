@@ -3,10 +3,10 @@ const Word = require('../../../db/models/word/word_model');
 
 const middlewares = {
     get: (req, res) => {
-        let kitName = req.query.setname;
-        WordsKit.find({'serviceInfo.name': kitName}, (err, data) => {
-            const wordsId = data[0].words
-            Word.find({'_id': {$in: wordsId}}, {__v: 0}, (err, data) => {
+        let kitId = req.query.kitId;
+        WordsKit.findById(kitId, (err, data) => {
+            const wordsIds = data.words
+            Word.find({'_id': {$in: wordsIds}}, {__v: 0}, (err, data) => {
                 res.json(data)
             })
         })

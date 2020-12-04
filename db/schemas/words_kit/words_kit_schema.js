@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
+const wordSchema = require('../word/word_schema');
 
 const WordsKitSchema = new mongoose.Schema({
     serviceInfo: {
         type: Object,
-        name: String,
+        name: wordSchema,
     },
     words: Array
 })

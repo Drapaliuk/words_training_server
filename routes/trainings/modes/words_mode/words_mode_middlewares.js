@@ -5,7 +5,7 @@ const educationPlanCreator = require('../../../../utils/create_education_plan/cr
 
 const middlewares = {
     post: (req, res) => {
-        const selectedWordsIds = req.body;
+        const { selectedWordsIds, applicationLanguage, selectedLanguagePair} = req.body
         const selectedWordsAmount = selectedWordsIds.length;
         const needWordsForMixing = selectedWordsAmount * 6; // зробити, щоб налаштовувати величину карток
     
@@ -14,7 +14,7 @@ const middlewares = {
     
             Word.find({'_id': {$in: randomWordsForMixing}}, (err, wordsForMixing) => {
                 Word.find({'_id': {$in: selectedWordsIds}}, {__v: 0}, (err, selectedWords) => {
-                    const scheduleTaskCard = educationPlanCreator(selectedWords); //тут не треба дублювати переклади просто айдішніки і особливості завдання
+                    const scheduleTaskCard = educationPlanCreator(selectedWords, applicationLanguage, selectedLanguagePair);
                     const variantList = taskCardCreator(scheduleTaskCard, wordsForMixing);
                     const responseObject = {
                         variantList,

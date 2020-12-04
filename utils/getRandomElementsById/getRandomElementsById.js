@@ -1,8 +1,8 @@
 const getRandomElementsById = function(arr, amount, exclusiveWords) {
     const availableWordsForFilterAmount = arr.length - exclusiveWords.length;
-    console.log('amount', amount)
-    console.log('availableWordsForFilterAmount', availableWordsForFilterAmount)
-    console.log('arr', arr)
+    // console.log('amount', amount)
+    // console.log('availableWordsForFilterAmount', availableWordsForFilterAmount)
+    // console.log('arr', arr)
     if(amount > availableWordsForFilterAmount) {
         console.error('you need too many elements')
         return arr

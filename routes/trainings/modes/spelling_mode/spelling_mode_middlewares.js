@@ -4,11 +4,15 @@ const mixingElements = require('../../../../utils/mixingElements/mixingElements'
 
 const middlewares = {
     post: (req, res) => {
-        const selectedWordsIds = req.body;
+        const { selectedWordsIds, applicationLanguage, selectedLanguagePair} = req.body
+
+
         Word.find({'_id': {$in: selectedWordsIds}})
             .then(selectedWords => {
-                console.log('selectedWords', selectedWords)
-                const scheduleTaskCard = educationPlanCreator(selectedWords);
+                
+                const scheduleTaskCard = educationPlanCreator(selectedWords, applicationLanguage, selectedLanguagePair);
+
+                console.log('scheduleTaskCard', scheduleTaskCard)
                 const tasks = scheduleTaskCard.map(word => mixingElements([...word[word.answerLang]]));
                 const responseObject = {
                     scheduleTaskCard,

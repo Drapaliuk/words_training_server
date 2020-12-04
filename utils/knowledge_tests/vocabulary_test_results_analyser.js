@@ -30,7 +30,7 @@ const languageLevelDefine = percentInterval => {
 const vocabularyTestAnalyser = testAnswers => {
     const testAnswersCopy = [...testAnswers];
     const languageLevel = languageLevelDefine(positiveAnswersPercent(positiveAnswersCounter(testAnswersCopy)));
-    console.log(languageLevel)
+    // console.log(languageLevel)
     return languageLevel
 }
 

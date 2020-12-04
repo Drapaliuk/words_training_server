@@ -23,7 +23,7 @@ const middlewares = {
             }
     
         }, [])
-        console.log(result)
+        // console.log(result)
         res.send(req.body)
     }
 }

@@ -6,7 +6,7 @@ const middlewares = {
             const userId = req.query.userid;
             User.findById({'_id': userId}, (err, user) => {
                 const userVocabularyIds = user.vocabulary;
-                console.log('userVocabularyIds', userVocabularyIds)
+                // console.log('userVocabularyIds', userVocabularyIds)
                 Word.find({'_id': {$in: userVocabularyIds}}, (err, vocabularyWords) => {
                     res.send(vocabularyWords)
                 })
@@ -19,7 +19,7 @@ const middlewares = {
 
             if(userId && wordId) {
                 User.findByIdAndUpdate({'_id': userId}, {$push: {'vocabulary': wordId} }, {new: true}, (err, data) => {
-                    console.log('POST', data)
+                    // console.log('POST', data)
                 return res.send({
                                   responseCode: 1,
                                   message: `${wordId} had saved`,

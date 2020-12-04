@@ -8,14 +8,15 @@ const mixingElements = require('../../../../utils/mixingElements/mixingElements'
 
 const middlewares = {
     post:(req, res) => {
-        const selectedWordsIds = req.body;
+        const { selectedWordsIds, applicationLanguage, selectedLanguagePair} = req.body
         const selectedWordsAmount = selectedWordsIds.length;
         const needWordsForMixing = selectedWordsAmount * 3;
         
+        console.log('applicationLanguage', applicationLanguage);
+
         Word.find({'_id': {$in: selectedWordsIds}}, {__v: 0})
             .then(selectedWords => {
-                console.log(selectedWords)
-                const scheduleTaskCard = educationPlanCreator(selectedWords);
+                const scheduleTaskCard = educationPlanCreator(selectedWords, applicationLanguage, selectedLanguagePair);
                 return scheduleTaskCard
             })
             .then(scheduleTaskCard => {
