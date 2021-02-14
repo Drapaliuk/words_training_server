@@ -10,10 +10,7 @@ const wordsRouter = require('./routes/word_kits/router');
 const userStoreRouter = require('./routes/user_store/router');
 const knowledgeTestsRouter = require('./routes/knowledge_tests/router');
 const handlerError401 = require('./error_handlers/401');
-const VocabularyTestModel = require('./db/models/knowledge_tests/vocabulary_test_model');
-const KnowledgeLevelsDescribesModel = require('./db/models/knowledge_levels_describes/knowledge_levels_describes'); 
-
-const WordsKit = require('./db/models/words_kit/words_kit_model');
+const isAuthRequest = require('./middlewares/is_auth_requst');
 
 const cors = require('cors');
 
@@ -26,6 +23,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
+
+// app.use(isAuthRequest)
 
 app.use('/profile', profileRouter)
 app.use('/wordkits', wordsRouter)

@@ -9,7 +9,6 @@ const middlewares = {
     post: (req, res) => {
         const userWordsKit = req.body
         const authToken = authTokenModifier.deleteBearer(req.headers.authorization);
-
         const { id: userId } = jsonwebtoken.decode(authToken, jwtKey);
 
         User.findByIdAndUpdate(userId, {'savedWordsKits': userWordsKit}, {new: true}, (err, data) => {
@@ -20,14 +19,14 @@ const middlewares = {
         })
    },
 
+
    get: (req, res) => {
-        const userWordsKit = req.body
         const authToken = authTokenModifier.deleteBearer(req.headers.authorization);
         const { id: userId } = jsonwebtoken.decode(authToken, jwtKey);
 
-        // User.findById(userId, (err, data) => {
-        //     res.json()
-        // })
+        User.findById(userId, (err, data) => {
+            res.json(data.savedWordsKits)
+        })
    }
 }
 

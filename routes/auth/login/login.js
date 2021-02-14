@@ -16,7 +16,7 @@ const middlewares = {
         if(user) {
             const passwordResult = bcrypt.compareSync(password, user.password);
             if(passwordResult) {
-                const authToken = jwt.sign({id: user._id}, jwtKey, {expiresIn: 5});
+                const authToken = jwt.sign({id: user._id}, jwtKey, {expiresIn: 10000});
                 const refreshToken = uuid()
                 RefreshTokenModel.create({userId: user._id, token: refreshToken});
     

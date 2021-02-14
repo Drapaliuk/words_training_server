@@ -1,0 +1,288 @@
+{
+  "words":[
+    {
+      "eng": "kitchen",
+      "ua": "кухня"
+    },
+    {
+      "eng": "knife",
+      "ua": "ніж"
+    },
+    {
+      "eng": "fork",
+      "ua": "вилка"
+    },
+    {
+      "eng": "spoon",
+      "ua": "ложка"
+    },
+    {
+      "eng": "pan",
+      "ua": "каструля"
+    },
+    {
+      "eng": "oven",
+      "ua": "піч"
+    },
+    {
+      "eng": "oil",
+      "ua": "олія"
+    },
+    {
+      "eng": "vinegar",
+      "ua": "оцет"
+    },
+    {
+      "eng": "matches",
+      "ua": "сірники"
+    },
+    {
+      "eng": "tablecloth",
+      "ua": "скатертина"
+    },
+    {
+      "eng": "soap",
+      "ua": "мило"
+    },
+    {
+      "eng": "shower",
+      "ua": "душ"
+    },
+    {
+      "eng": "bath",
+      "ua": "ванна"
+    },
+    {
+      "eng": "bowl",
+      "ua": "унітаз"
+    },
+    {
+      "eng": "brush",
+      "ua": "щітка"
+    },
+    {
+      "eng": "water",
+      "ua": "вода"
+    },
+    {
+      "eng": "sink",
+      "ua": "раковина"
+    },
+    {
+      "eng": "hot",
+      "ua": "гарячий"
+    },
+    {
+      "eng": "cold",
+      "ua": "холодний"
+    },
+    {
+      "eng": "mirror",
+      "ua": "дзеркало"
+    },
+    {
+      "eng": "house",
+      "ua": "будинок"
+    },
+    {
+      "eng": "street",
+      "ua": "вулиця"
+    },
+    {
+      "eng": "sign",
+      "ua": "знак"
+    },
+    {
+      "eng": "crosswalk",
+      "ua": "пішохідний перехід"
+    },
+    {
+      "eng": "bus",
+      "ua": "автобус"
+    },
+    {
+      "eng": "underground",
+      "ua": "метро"
+    },
+    {
+      "eng": "station",
+      "ua": "зупинка"
+    },
+    {
+      "eng": "prdestrian",
+      "ua": "піщохід"
+    },
+    {
+      "eng": "driver",
+      "ua": "водій"
+    },
+    {
+      "eng": "ticket",
+      "ua": "квиток"
+    },
+    {
+      "eng": "road",
+      "ua": "дорога"
+    },
+    {
+      "eng": "gas station",
+      "ua": "заправка"
+    },
+    {
+      "eng": "guide",
+      "ua": "гід"
+    },
+    {
+      "eng": "excursion",
+      "ua": "екскурсія"
+    },
+    {
+      "eng": "travel",
+      "ua": "подорож"
+    },
+    {
+      "eng": "backpack",
+      "ua": "рюкзак"
+    },
+    {
+      "eng": "help",
+      "ua": "допомога"
+    },
+    {
+      "eng": "campaign",
+      "ua": "похід"
+    },
+    {
+      "eng": "tent",
+      "ua": "палатка"
+    },
+    {
+      "eng": "mosquito spray",
+      "ua": "спрей від комарів"
+    },
+    {
+      "eng": "strada",
+      "ua": "дорога"
+    },
+    {
+      "eng": "spoon",
+      "ua": "ложка"
+    },
+    {
+      "eng": "fork",
+      "ua": "вилка"
+    },
+    {
+      "eng": "cat",
+      "ua": "кіт"
+    },
+    {
+      "eng": "shelf",
+      "ua": "полиця"
+    },
+    {
+      "eng": "tabble",
+      "ua": "стіл"
+    },
+    {
+      "eng": "road",
+      "ua": "дорога"
+    },
+    {
+      "eng": "house",
+      "ua": "дім"
+    },
+    {
+      "eng": "wall",
+      "ua": "стіна"
+    },
+    {
+      "eng": "socket",
+      "ua": "розетка"
+    },
+    {
+      "eng": "laptop",
+      "ua": "ноутбук"
+    },
+    {
+      "eng": "map",
+      "ua": "карта"
+    },
+    {
+      "eng": "pen",
+      "ua": "ручка"
+    },
+    {
+      "eng": "copybook",
+      "ua": "зошит"
+    },
+    {
+      "eng": "chair",
+      "ua": "стілець"
+    },
+    {
+      "eng": "wardrobe",
+      "ua": "шафа"
+    },
+    {
+      "eng": "suddenly",
+      "ua": "раптом"
+    },
+    {
+      "eng": "opinion",
+      "ua": "думка"
+    },
+    {
+      "eng": "fault",
+      "ua": "помилка"
+    },
+    {
+      "eng": "clarify",
+      "ua": "уточняти"
+    },
+    {
+      "eng": "greedy",
+      "ua": "жадібний"
+    },
+    {
+      "eng": "addict",
+      "ua": "залежний"
+    },
+    {
+      "eng": "sink",
+      "ua": "раковина"
+    },
+    {
+      "eng": "blanket",
+      "ua": "ковдра"
+    },
+    {
+      "eng": "suitcase",
+      "ua": "валіза"
+    },
+    {
+      "eng": "wire",
+      "ua": "дріт"
+    },
+    {
+      "eng": "fryuing pan",
+      "ua": "сковорідка"
+    },
+    {
+      "eng": "pan",
+      "ua": "каструля"
+    },
+    {
+      "eng": "ladder",
+      "ua": "драбина"
+    },
+    {
+      "eng": "shovel",
+      "ua": "лопата"
+    },
+    {
+      "eng": "carpet",
+      "ua": "кидим"
+    }
+]
+}

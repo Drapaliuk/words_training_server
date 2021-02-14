@@ -16,4 +16,9 @@ router.post('/signin', signinMiddlewares.post)
       .get('/isAuthorization', verifyTokenMiddleware({secret: jwtKey, algorithms: ['HS256']}), isAuthorizationMiddlewares.get)
 
 
+
+      
 module.exports = router;
+
+
+
